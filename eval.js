@@ -107,6 +107,7 @@ function logData(promptData, timeData){
     time: timeData,
     promptLength: promptData.length,
     language: userLang,
+    userID: getUserID(),
     keen: {
       timestamp: new Date().toISOString()
     }
@@ -134,6 +135,7 @@ function logFail(promptData, typedData, timeData){
     time: timeData,
     promptLength: promptData.length,
     language: userLang,
+    userID: getUserID(),
     keen: {
       timestamp: new Date().toISOString()
     }
@@ -153,3 +155,18 @@ function logFail(promptData, typedData, timeData){
   return true;
 }
 
+//used to keep track of users so that data can be averaged on a per
+//user basis
+function getUserID(){
+  var id = localStorage.getItem("userID");
+  if(id == null){
+    //no id already so make one
+    id = Math.floor((1 + Math.random()) * 0xFFFFFFFF)
+      .toString(16)
+      .substring(1);
+    var d = new Date();
+    localStorage.setItem("userID",id);
+  }
+  console.log("user ID " + id);
+  return id
+}
