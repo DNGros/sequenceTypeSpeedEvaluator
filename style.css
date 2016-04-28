@@ -28,19 +28,20 @@ body{
   font-size: 50px; 
 }
 #instructions{
-  font-size: 20px
+  font-size: 20px;
+  text-align: justify;
 }
 
 #prompt-section{
   position: relative;
   margin: auto;
-  width: 150px;
+  width: 250px;
 }
 #prompt-holder {
   width: 150px;
   height: 75px;
   background-color: #DCEDC8;
-  
+  margin: auto;
   padding: 0px;
   text-align: center;
   
@@ -53,7 +54,7 @@ body{
 
 #prompt {
   font-weight: bold;
-  padding-top: 28px
+  padding-top: 28px;
 }
 #ready{
   width: 100%;

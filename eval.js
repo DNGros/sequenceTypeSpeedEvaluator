@@ -51,7 +51,7 @@ $( "body" ).keypress(function(event ) {
       ready.show();
       promptObj.text("WRONG");
       ready.text("You typed " + typedLetters.toUpperCase() + " when expected " +
-                    prompt + ". Press f when ready for the next one.");
+                    prompt + ". Press f when ready.");
     }
   }
   
