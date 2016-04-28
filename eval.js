@@ -1,11 +1,13 @@
 //jquery objects
 var ready;
 var promptObj;
-
+var readyText;
+var doLogs = true;
 $( document ).ready(function() {
   ready = $("#ready");
   promptObj = $("#prompt");
   console.log( "ready!" );
+  readyText = ready.text;
 });
 
 var prompt = "";
@@ -21,59 +23,47 @@ $( "body" ).keypress(function(event ) {
     }
   }
   else{
+    console.log(prompt);
     //is prompted
     typedLetters += String.fromCharCode(event.which);
     if(typedLetters.toUpperCase() == prompt.toUpperCase()){
       var timeToType = (new Date().getTime()) - promptTime;
-      var success = false;
+      var success = true;
       if(timeToType < 1000*5) //if took longer than 5 seconds probabily error
         success = logData(prompt, timeToType);
-      if(success){
-        prompted = false;
-        ready.show();
-        promptObj.text("Typed sequence in " + timeToType + " ms");
-        ready.text("Type f when ready.");
-        typedLetters = "";
+      if(success){;
+        promptObj.text(timeToType + " ms");
       }
       else{
-        prompted = false;
-        ready.show();
         promptObj.text("Data could not be recorded :( \n Maybe ad block blocked it? Try turning it off for this page.");
-        ready.text("Type f when ready.");
-        typedLetters = "";
       }
-    }
-    else if(prompt.length == 1){
-      var timeToType = (new Date().getTime()) - promptTime;
-      if(timeToType < 1000*7) //if took longer than 7 seconds probabily error
-        success = logFail(prompt, typedLetters, timeToType);
       prompted = false;
       ready.show();
-      promptObj.text("WRONG: in " + timeToType + " ms you typed " + typedLetters.toUpperCase() +
-                     " when expected " + prompt);
-      ready.text("Type f when ready.");
-      typedLetters = "";
+      ready.text("Press f when ready");
     }
-    else if(prompt.length == 2 && typedLetters.length == 2 || 
+    else if((prompt.length == 2 && typedLetters.length == 2) || 
             typedLetters.charAt(0).toUpperCase() != prompt.charAt(0)){
       var timeToType = (new Date().getTime()) - promptTime;
-      if(timeToType < 1000*7) //if took longer than 7 seconds probabily error
+      if(timeToType < 1000*7){ //if took longer than 7 seconds probabily error
         success = logFail(prompt, typedLetters, timeToType);
+      }
       prompted = false;
       ready.show();
-      promptObj.text("WRONG: in " + timeToType + " ms you typed " + typedLetters.toUpperCase() +
-                     " when expected " + prompt);
-      ready.text("Type f when ready.");
-      typedLetters = "";
+      promptObj.text("WRONG");
+      ready.text("You typed " + typedLetters.toUpperCase() + " when expected " +
+                    prompt + ". Press f when ready for the next one.");
     }
-    console.log("tpyed " + typedLetters.toUpperCase() + " promt " + prompt);
   }
+  
+  
+    
+  console.log("tpyed " + typedLetters.toUpperCase() + " promt " + prompt);
+  
 });
 
 function givePrompt(){
   console.log("new prompt");
-  prompt = ""
-  
+  typedLetters = "";
   prompt = String.fromCharCode(65 + Math.floor(Math.random()*26));
   if(Math.random() < .7){
     //70% chance of being two character 
@@ -82,7 +72,7 @@ function givePrompt(){
   $("#prompt").text(prompt);
   promptTime = new Date().getTime();
   prompted = true;
-  $("#ready").hide();
+  ready.hide();
   
 }
 
@@ -101,6 +91,8 @@ var client = new Keen({
 
 
 function logData(promptData, timeData){
+  if(!doLogs)
+    return true;
   var userLang = navigator.language || navigator.userLanguage;
   var sampleEvent = {
     promt: promptData,
@@ -128,6 +120,8 @@ function logData(promptData, timeData){
 }
 
 function logFail(promptData, typedData, timeData){
+  if(!doLogs)
+    return true;
   var userLang = navigator.language || navigator.userLanguage;
   var failEvent = {
     promt: promptData,
