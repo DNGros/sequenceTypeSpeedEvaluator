@@ -38,7 +38,7 @@ $( "body" ).keypress(function(event ) {
         promptObj.text("Data could not be recorded :( \n Maybe ad block blocked it? Try turning it off for this page.");
       }
       prompted = false;
-      ready.show();
+      ready.css('visibility','visible');
       ready.text("Press f when ready");
     }
     else if((prompt.length == 2 && typedLetters.length == 2) || 
@@ -48,7 +48,7 @@ $( "body" ).keypress(function(event ) {
         success = logFail(prompt, typedLetters, timeToType);
       }
       prompted = false;
-      ready.show();
+      ready.css('visibility','visible');
       promptObj.text("WRONG");
       ready.text("You typed " + typedLetters.toUpperCase() + " when expected " +
                     prompt + ". Press f when ready.");
@@ -72,7 +72,7 @@ function givePrompt(){
   $("#prompt").text(prompt);
   promptTime = new Date().getTime();
   prompted = true;
-  ready.hide();
+  ready.css('visibility','hidden');
   
 }
 

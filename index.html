@@ -10,19 +10,34 @@
   </head>
   <body>
     <div id="content-holder">
-      <div id="inner-holder">
-        <h1 id="title">Type Speed Survey</h1> 
-        <p id="instructions">After pressing F, you will presented with one or two characters. Type these characters as quickly as possible 
-          while still being very accurate. Case does not matter.</p>
-        <br>
-        <div id = "prompt-section">
-          <div id="prompt-holder">
-            <div id="inner-promt-holder">
-              <p id="prompt">--</p>
+      <div id="main-holder" class="round-box">
+        <div id="inner-holder">
+          <h1 id="title">Type Speed Survey</h1> 
+          <p id="instructions">After pressing F, you will presented with one or two characters. Type these characters as quickly as possible 
+            while still being very accurate. Case does not matter.</p>
+          <br>
+          <div id = "prompt-section">
+            <div id="prompt-holder">
+              <div id="inner-promt-holder">
+                <p id="prompt">--</p>
+              </div>
             </div>
+            <div id="ready">Press f when ready</div>
           </div>
-          <div id="ready">Press f when ready</div>
         </div>
+      </div>
+      <div id="bot-holder">
+        <div id="samples-disp" class="round-box bot-col">
+          Samples Contributed:
+        </div>
+        <div id="avg-disp" class="round-box bot-col">
+          Average Time:
+        </div>
+        <a href="data.html">
+          <div id="more-disp" class="round-box bot-col">
+            View More Data!
+          </div>
+        </a>
       </div>
     </div>
   </body>
