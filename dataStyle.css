@@ -1,0 +1,20 @@
+body{
+  background-image: url(Imgs/shattered.png);
+  font-family: 'Amaranth', sans-serif;
+  position: relative;
+}
+.round-box{
+  border-radius: 20px;
+  border-color: black;
+  border-width: 5px;
+  border-style: solid;
+}
+#content{
+  max-width: 1080px;
+  margin: auto;
+}
+
+.column{
+  width: 50%;
+  float: left;
+}

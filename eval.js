@@ -3,11 +3,19 @@ var ready;
 var promptObj;
 var readyText;
 var doLogs = true;
-$( document ).ready(function() {
+var mySamples = 0;
+var myRights = 0;
+var mySum = 0;
+
+$(document).ready(function(){
   ready = $("#ready");
   promptObj = $("#prompt");
-  console.log( "ready!" );
+  console.log("ready!");
   readyText = ready.text;
+  mySamples = localStorage.getItem("mySamples") || 0;
+  mySum = parseInt(localStorage.getItem("mySum")) || 0;
+  myRights = localStorage.getItem("myRights") || 0;
+  updateCols();
 });
 
 var prompt = "";
@@ -18,7 +26,7 @@ var typedLetters = "";
 
 $( "body" ).keypress(function(event ) {
   if(!prompted){
-    if(event.charCode == 70 || event.charCode ==102){
+    if(event.charCode == 70 || event.charCode ==102) {
       givePrompt();
     }
   }
@@ -31,7 +39,7 @@ $( "body" ).keypress(function(event ) {
       var success = true;
       if(timeToType < 1000*5) //if took longer than 5 seconds probabily error
         success = logData(prompt, timeToType);
-      if(success){;
+      if(success){
         promptObj.text(timeToType + " ms");
       }
       else{
@@ -80,9 +88,9 @@ function givePrompt(){
 
 //DATA TRACKING STUFF
 var client = new Keen({
-    projectId: "57172cdb672e6c5c4fa4f63f", // String (required always)
-    writeKey: "3a292db375230386e3ac6f4b2f43e45bb0e254fde0a1ce27575227e529a17771cfc72dc4c86243eff923373bc8bebec956b73538033017c30fd86c977f78a4bc88944ce868ee0d0738002014fbaed7aab10735d25094a5c7ac975b509c914969",   // String (required for sending data)
-    readKey: "9f26162068f5a5863e077a4d3f19639cbbe10f3de6bf9ba5129ca2c8c10c5a1368be8ac8c6f56d4e5bd822689c53a59eeefd326be1d1dc5117e0be52d743345ce7d2b0be811c94405c83d8adef68be11a643245dc50ae72b23d8b1f7449f1e88"      // String (required for querying data)
+    projectId: myProjectId, // defined in keenKeys.js . See CONTRIBUTING.md
+    writeKey: myWriteKey,   // defined in keenKeys.js
+    readKey: myReadKey      // defined in keenKeys.js
 
     // protocol: "https",         // String (optional: https | http | auto)
     // host: "api.keen.io/3.0",   // String (optional)
@@ -91,8 +99,21 @@ var client = new Keen({
 
 
 function logData(promptData, timeData){
+  //Return early if disabled
   if(!doLogs)
     return true;
+  
+  //Store local data
+  mySamples++;
+  myRights++;
+  console.log("timeData " + timeData);
+  mySum += parseInt(timeData);
+  localStorage.setItem("mySamples", mySamples);
+  localStorage.setItem("myRights", myRights);
+  localStorage.setItem("mySum",mySum);
+  updateCols();
+  
+  //Construct event
   var userLang = navigator.language || navigator.userLanguage;
   var sampleEvent = {
     promt: promptData,
@@ -104,6 +125,7 @@ function logData(promptData, timeData){
       timestamp: new Date().toISOString()
     }
   }
+  
   // Send it to the "type" collection
   client.addEvent("type", sampleEvent, function(err, res){
     if (err) {
@@ -122,6 +144,10 @@ function logData(promptData, timeData){
 function logFail(promptData, typedData, timeData){
   if(!doLogs)
     return true;
+  mySamples++;
+  localStorage.setItem("mySamples", mySamples);
+  updateCols();
+  
   var userLang = navigator.language || navigator.userLanguage;
   var failEvent = {
     promt: promptData,
@@ -163,4 +189,13 @@ function getUserID(){
   }
   console.log("user ID " + id);
   return id
+}
+
+function updateCols(){
+  $("#samples-disp").text("Samples Contributed: " + mySamples);
+  console.log("my sum " + mySum + " r " + myRights);
+  if(myRights > 0)
+    $("#avg-disp").text("Average Time: " + Math.round(mySum/myRights) + "ms");
+  else
+    $("#avg-disp").text("Average Time: --");
 }
